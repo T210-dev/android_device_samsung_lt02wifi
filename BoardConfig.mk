@@ -144,7 +144,6 @@ TARGET_FORCE_CPU_UPLOAD := true
 
 # Bluetooth
 BOARD_HAVE_BLUETOOTH := true
-BOARD_HAVE_BLUETOOTH_BCM := true
 USE_BLUETOOTH_SAP := false
 
 # Needed for blobs
