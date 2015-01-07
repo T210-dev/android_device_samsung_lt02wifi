@@ -1,6 +1,6 @@
 $(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
 
-$(call inherit-product-if-exists, vendor/samsung/lt02wifi/lt02wifi-vendor.mk)
+$(call inherit-product, vendor/samsung/lt02wifi/lt02wifi-vendor.mk)
 
 DEVICE_PACKAGE_OVERLAYS += device/samsung/lt02wifi/overlay
 
