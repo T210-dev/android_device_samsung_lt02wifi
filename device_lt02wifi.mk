@@ -4,9 +4,6 @@ $(call inherit-product, vendor/samsung/lt02wifi/lt02wifi-vendor.mk)
 
 DEVICE_PACKAGE_OVERLAYS += device/samsung/lt02wifi/overlay
 
-# Set wifi-only before it's set by generic_no_telephony.mk
-$(call inherit-product, build/target/product/full_base.mk)
-
 PRODUCT_CHARACTERISTICS := tablet
 
 # Enable higher-res drawables while keeping mdpi as primary source
@@ -108,6 +105,9 @@ PRODUCT_PACKAGES += \
     LiveWallpapersPicker \
     VisualizationWallpapers \
     librs_jni
+
+# Set wifi-only before it's set by generic_no_telephony.mk
+$(call inherit-product, build/target/product/full_base.mk)
 
 $(call inherit-product, frameworks/native/build/tablet-7in-hdpi-1024-dalvik-heap.mk)
 $(call inherit-product-if-exists, vendor/marvell/generic/sd8787/FwImage/sd8787fw.mk)
