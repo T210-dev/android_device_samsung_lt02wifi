@@ -1,6 +1,5 @@
 import init.pxa988.usb.rc
 import init.pxa988.tel.rc
-#import init.wifi.rc
 
 on early-init
     mkdir /efs 0771 radio system
@@ -279,8 +278,8 @@ on post-fs-data
     # for blcr
     #mkdir /data/blcr 0775 system system
     # marvell_dut
-    insmod /system/lib/modules/mlan.ko
-    insmod /system/lib/modules/mbt8xxx.ko
+    #insmod /system/lib/modules/mlan.ko
+    #insmod /system/lib/modules/mbt8xxx.ko
 
 # MTP permission
 	chmod 0660 /dev/usb_mtp_gadget
@@ -559,9 +558,11 @@ service stupdate /system/bin/STUpdateTool_V4_4R -s
 on property:nfc.st.update=1
     start stupdate
 
+rmmod sd8xxx
+rmmod mlan
 
 # for bluetooth rf test.
-service bt_dut_cmd /system/bin/mrvl_dut.sh
+service bt_dut_cmd /system/bin/mrvl_dut
      class main
      group bluetooth net_bt_admin
      disabled
@@ -627,34 +628,35 @@ service hostapd_bin /system/bin/hostapd -d \
     disabled
     oneshot
 
+# init.rc does not yet support applying capabilities, so run as root and
+# let wireless daemon drop uid to system with the right linux capabilities
+service mwirelessd /system/bin/MarvellWirelessDaemon
+    class main
+    
 #for WiFi MFG(TestMode)
 service mfgloader /system/bin/mfgloader
     class main
     disabled
     oneshot
 
-service wlandutservice /system/bin/wlandutservice.sh
+service wlandutservice /system/bin/wlandutservice
     class main
     user system
     group wifi net_raw net_admin system inet
     disabled
     oneshot
 
-#on property:wifi.interface.online=1
-#	start wlandutservice
-
 service macloader /system/bin/macloader
     class main
     oneshot
 
+on property:init.svc.macloader=stopped
+chown system root /data/.cid.info
+chmod 0664 /data/.cid.info
+chown system root /data/.rev
+chmod 0660 /data/.rev
 
-# init.rc does not yet support applying capabilities, so run as root and
-# let wireless daemon drop uid to system with the right linux capabilities
-service mwirelessd /system/bin/MarvellWirelessDaemon
-    class main
-
-# end of wifi
-
+#End of WiFi MFG(TestMode)
 
 # create virtual SD card at /mnt/sdcard, based on the /data/media directory
 # daemon will drop to user/group system/media_rw after initializing
